@@ -26,6 +26,10 @@ public class JwtService {
         return claimsResolver.apply(claims);
     }
 
+    public String generateToken(UserDetails userDetails) {
+        return generateToken(Map.of(), userDetails);
+    }
+
     public String generateToken(
             Map<String, Object> extraClaims,
             UserDetails userDetails
@@ -41,6 +45,7 @@ public class JwtService {
                 .signWith(getSignInKey())
                 .compact();
     }
+
 
     public boolean isTokenValid(String token, UserDetails userDetails) {
         final String username = extractUsername(token);
