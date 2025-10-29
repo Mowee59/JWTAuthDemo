@@ -1,0 +1,28 @@
+{
+  "name": "Spring Boot DevContainer (Java 17)",
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu-22.04",
+
+  "features": {
+    "ghcr.io/devcontainers/features/java:1": {
+      "version": "17"
+    },
+    "ghcr.io/devcontainers/features/maven:1": {},
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {}
+  },
+
+  "forwardPorts": [8080],
+  "remoteUser": "vscode",
+
+  "postCreateCommand": "mvn clean install -DskipTests",
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "vscjava.vscode-java-pack",
+        "vmware.vscode-spring-boot",
+        "gabrielbb.vscode-lombok",
+        "redhat.vscode-xml"
+      ]
+    }
+  }
+}
