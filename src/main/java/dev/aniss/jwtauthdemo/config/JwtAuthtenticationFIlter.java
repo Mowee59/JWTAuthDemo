@@ -17,7 +17,10 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 
+import lombok.extern.slf4j.Slf4j;
+
 @Component
+@Slf4j
 @RequiredArgsConstructor
 public class JwtAuthtenticationFIlter extends OncePerRequestFilter {
 
@@ -37,6 +40,7 @@ public class JwtAuthtenticationFIlter extends OncePerRequestFilter {
 
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            log.debug("No Bearer token in request to {}", request.getRequestURI());
             filterChain.doFilter(request, response);
             return;
         }
@@ -47,6 +51,7 @@ public class JwtAuthtenticationFIlter extends OncePerRequestFilter {
         if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = userDetailsService.loadUserByUsername(userEmail);
             if (jwtService.isTokenValid(jwt, userDetails)) {
+                log.debug("JWT valid, setting authentication for user: {}", userEmail);
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                     userDetails, 
                     null, 

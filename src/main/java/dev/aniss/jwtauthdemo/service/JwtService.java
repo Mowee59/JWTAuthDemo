@@ -12,7 +12,10 @@ import java.util.Date;
 import java.util.Map;
 import java.util.function.Function;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Service
+@Slf4j
 public class JwtService {
 
     private static final String SECRET_KEY = "00f129b03ee0f6f90f43432d1e5ed729bc0e9da0e51cd08f4eb8a3caf7b3c5f3";
@@ -49,7 +52,11 @@ public class JwtService {
 
     public boolean isTokenValid(String token, UserDetails userDetails) {
         final String username = extractUsername(token);
-        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+        boolean valid = username.equals(userDetails.getUsername()) && !isTokenExpired(token);
+        if (!valid) {
+            log.debug("Invalid or expired token for user: {}", userDetails.getUsername());
+        }
+        return valid;
     }
 
     private boolean isTokenExpired(String token) {

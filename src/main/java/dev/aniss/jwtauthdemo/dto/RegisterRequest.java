@@ -1,6 +1,7 @@
 package dev.aniss.jwtauthdemo.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,6 +20,7 @@ public class RegisterRequest {
   private String lastName;
 
   @NotBlank(message = "Email is required")
+  @Email(message = "Must be a valid email address")
   private String email;
 
   @NotBlank(message = "Password is required")

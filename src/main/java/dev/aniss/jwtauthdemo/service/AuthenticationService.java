@@ -17,7 +17,10 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class AuthenticationService {
 
@@ -45,6 +48,7 @@ public class AuthenticationService {
     
     var jwtToken = jwtService.generateToken(user);
 
+    log.info("User registered successfully: {}", request.getEmail());
     return AuthenticationResponse.builder()
       .token(jwtToken)
       .build(); 
@@ -67,6 +71,7 @@ public class AuthenticationService {
 
     var jwtToken = jwtService.generateToken(user);
 
+    log.info("User authenticated successfully: {}", request.getEmail());
     return AuthenticationResponse.builder()
       .token(jwtToken)
       .build();

@@ -13,9 +13,11 @@ import dev.aniss.jwtauthdemo.dto.RegisterRequest;
 import dev.aniss.jwtauthdemo.dto.AuthenticationRequest;
 
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequestMapping("/api/v1/auth")
+@Slf4j
 @RequiredArgsConstructor
 public class AuthenticationController {
 
@@ -27,13 +29,15 @@ public class AuthenticationController {
   public ResponseEntity<AuthenticationResponse> register(
     @Valid @RequestBody RegisterRequest request
   ) {
+    log.info("Registration request for email: {}", request.getEmail());
     return ResponseEntity.ok(authenticationService.register(request));
   }
 
   @PostMapping("/authenticate")
   public ResponseEntity<AuthenticationResponse> authenticate(
-    @RequestBody AuthenticationRequest request
+    @Valid @RequestBody AuthenticationRequest request
   ) {
-    return ResponseEntity.ok(authenticationService.authenticate(request)); // TODO: Implement authentication logic
+    log.info("Authentication request for email: {}", request.getEmail());
+    return ResponseEntity.ok(authenticationService.authenticate(request));
   }
 }
