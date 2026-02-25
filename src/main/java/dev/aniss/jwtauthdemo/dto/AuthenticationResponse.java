@@ -1,4 +1,4 @@
-package dev.aniss.jwtauthdemo.controllers;
+package dev.aniss.jwtauthdemo.dto;
 
 import lombok.Data;
 import lombok.Builder;
