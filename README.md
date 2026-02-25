@@ -11,6 +11,7 @@ Démo d'implémentation d'**authentification JWT** avec **Spring Boot 3**, Sprin
 - [Structure du projet](#structure-du-projet)
 - [Prérequis](#prérequis)
 - [Lancer le projet](#lancer-le-projet)
+- [Docker Compose](#docker-compose)
 - [Configuration et variables d'environnement](#configuration-et-variables-denvironnement)
 - [API](#api)
 - [Documentation Swagger](#documentation-swagger)
@@ -148,6 +149,62 @@ spring:
 ```
 
 Ou commenter la dépendance `spring-boot-docker-compose` dans le `pom.xml` pour lancer l’application sans le module Docker Compose.
+
+---
+
+## Docker Compose
+
+Le fichier `compose.yaml` à la racine du projet définit deux services utilisés pour le développement et la démo : une base PostgreSQL et l’interface Adminer.
+
+### Services
+
+| Service    | Image              | Rôle                                                                 |
+| ---------- | ------------------ | -------------------------------------------------------------------- |
+| **postgres** | `postgres:16-alpine` | Base de données PostgreSQL. Exposée sur le port **5432**. Données persistées dans le volume `postgres-data`. |
+| **adminer**  | `adminer:4`         | Interface web d’administration de la base. Accessible sur **http://localhost:8081**. Démarre après le healthcheck de PostgreSQL. |
+
+Le service **adminer** dépend de **postgres** avec la condition `service_healthy` : Adminer ne démarre qu’une fois PostgreSQL prêt à accepter des connexions.
+
+### Variables d’environnement Docker
+
+Les variables ci-dessous sont définies dans `compose.yaml` pour chaque service. Pour les surcharger sans modifier le fichier, utiliser un fichier `.env` à la racine du projet ou passer des variables d’environnement au lancement de `docker compose`.
+
+#### Service `postgres`
+
+| Variable             | Description                          | Valeur par défaut |
+| -------------------- | ------------------------------------ | ----------------- |
+| `POSTGRES_USER`      | Utilisateur PostgreSQL créé au premier démarrage | `postgres` |
+| `POSTGRES_PASSWORD`  | Mot de passe de cet utilisateur      | `password`        |
+| `POSTGRES_DB`        | Nom de la base de données créée     | `postgres`        |
+
+L’application Spring Boot doit utiliser les mêmes valeurs dans `spring.datasource.url`, `spring.datasource.username` et `spring.datasource.password` (ou via les variables d’environnement Spring) pour se connecter à ce conteneur.
+
+#### Service `adminer`
+
+| Variable                  | Description                                    | Valeur par défaut |
+| ------------------------- | ---------------------------------------------- | ----------------- |
+| `ADMINER_DEFAULT_SERVER`  | Nom du serveur PostgreSQL (nom du service)     | `postgres`        |
+
+Avec cette valeur, Adminer pré-remplit le champ « Serveur » avec le nom du service Docker `postgres`. Pour se connecter depuis l’interface Adminer, utiliser **Système** : PostgreSQL, **Serveur** : `postgres`, **Utilisateur** : `postgres`, **Mot de passe** : `password`.
+
+### Surcharger les variables Docker
+
+Créer un fichier `.env` à la racine (à côté de `compose.yaml`) :
+
+```env
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=mon_mot_de_passe
+POSTGRES_DB=postgres
+```
+
+Ou exporter les variables avant d’exécuter `docker compose up -d` :
+
+```bash
+export POSTGRES_PASSWORD=mon_mot_de_passe
+docker compose up -d
+```
+
+En cas de changement de `POSTGRES_USER`, `POSTGRES_PASSWORD` ou `POSTGRES_DB`, adapter également la configuration Spring (`application.yml` ou variables `SPRING_DATASOURCE_*`) pour que l’application puisse se connecter à la base.
 
 ---
 
