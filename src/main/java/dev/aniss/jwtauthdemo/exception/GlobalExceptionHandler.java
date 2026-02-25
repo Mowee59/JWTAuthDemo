@@ -116,6 +116,25 @@ public class GlobalExceptionHandler {
     }
 
     /**
+     * Handles 400 Bad Request - Invalid request 
+     */
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<ErrorResponse> handleBadRequestException(
+            BadRequestException ex,
+            HttpServletRequest request
+    ) {
+        log.warn("Bad request: {}", ex.getMessage());
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .status(HttpStatus.BAD_REQUEST.value())
+                .error("BAD_REQUEST")
+                .message(ex.getMessage())
+                .timestamp(LocalDateTime.now())
+                .path(request.getRequestURI())
+                .build();
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+    }
+
+    /**
      * Handles 400 Bad Request - Validation errors from @Valid
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)

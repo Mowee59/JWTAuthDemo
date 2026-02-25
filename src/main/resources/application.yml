@@ -14,3 +14,8 @@ spring:
         format_sql: true
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+# JWT: override in production via env vars (e.g. JWT_SECRET_KEY, JWT_EXPIRATION_MS)
+jwt:
+  secret-key: ${JWT_SECRET_KEY:00f129b03ee0f6f90f43432d1e5ed729bc0e9da0e51cd08f4eb8a3caf7b3c5f3}
+  expiration-ms: ${JWT_EXPIRATION_MS:1440000} # 24 minutes

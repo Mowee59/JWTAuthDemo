@@ -1,4 +1,4 @@
-package dev.aniss.jwtauthdemo.config;
+package dev.aniss.jwtauthdemo.config.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.aniss.jwtauthdemo.dto.ErrorResponse;

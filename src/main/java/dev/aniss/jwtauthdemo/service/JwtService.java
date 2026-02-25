@@ -4,6 +4,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +19,15 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class JwtService {
 
-    private static final String SECRET_KEY = "00f129b03ee0f6f90f43432d1e5ed729bc0e9da0e51cd08f4eb8a3caf7b3c5f3";
+    private final String secretKey;
+    private final long expirationMs;
+
+    public JwtService(
+            @Value("${jwt.secret-key}") String secretKey,
+            @Value("${jwt.expiration-ms}") long expirationMs) {
+        this.secretKey = secretKey;
+        this.expirationMs = expirationMs;
+    }
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
@@ -43,7 +52,7 @@ public class JwtService {
                     .add(extraClaims)
                     .subject(userDetails.getUsername())
                     .issuedAt(new Date(System.currentTimeMillis()))
-                    .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24 )) // todo add duration constant
+                    .expiration(new Date(System.currentTimeMillis() + expirationMs))
                     .and()
                 .signWith(getSignInKey())
                 .compact();
@@ -80,7 +89,7 @@ public class JwtService {
 
     private SecretKey getSignInKey() {
 
-        byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
+        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);
 
     }

@@ -1,4 +1,4 @@
-package dev.aniss.jwtauthdemo.config;
+package dev.aniss.jwtauthdemo.config.security;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -40,7 +40,7 @@ public class SecurityConfig {
         .csrf(csrf -> csrf.disable())
         // Allow public access to authentication endpoints
         .authorizeHttpRequests(auth -> auth
-            .requestMatchers("/api/v1/auth/**").permitAll()
+            .requestMatchers("/api/v1/auth/**", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/favicon.ico").permitAll()
             .anyRequest().authenticated()
         )
         // Enforce stateless sessions
