@@ -17,7 +17,6 @@ Démo d'implémentation d'**authentification JWT** avec **Spring Boot 3**, Sprin
 - [Documentation Swagger](#documentation-swagger)
 - [Utilisateurs de démo](#utilisateurs-de-démo)
 - [Sécurité](#sécurité)
-- [Tests](#tests)
 
 ---
 
@@ -344,13 +343,6 @@ S’authentifier avec ces identifiants pour obtenir un JWT et tester les endpoin
 
 ---
 
-## Tests
-
-Lancer les tests avec :
-
-```bash
-mvn test
-```
 
 Le projet contient au minimum un test de chargement du contexte (`@SpringBootTest`). Ajouter des tests unitaires (services, JwtService) et d’intégration (MockMvc ou TestRestTemplate) pour les endpoints d’auth et protégés selon les besoins.
 
